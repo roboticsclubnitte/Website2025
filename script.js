@@ -5,7 +5,7 @@
  * 1. Toggling the mobile navigation menu.
  * 2. Applying fade-in animations to sections as they are scrolled into view.
  * 3. Submitting the contact form data to a Google Form endpoint.
- * 4. Handling the event registration button.
+ * 4. Handling the office bearer scroller animation.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -105,17 +105,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // ===================================================================
-  // 4. Event Registration Button Handler
+  // 4. Office Bearer Scroller Logic
   // ===================================================================
-  // This adds an event listener to the "Register Now" button.
-  // While it's a direct link, this allows for future functionality like analytics.
-  const registerButton = document.querySelector('a[href^="https://docs.google.com/forms"]');
-  
-  if (registerButton) {
-    registerButton.addEventListener('click', () => {
-      console.log('User clicked on the registration link.');
-      // The default behavior (opening the link in a new tab) will continue.
-    });
+  // This script handles the automatic scrolling and allows manual override.
+  const scroller = document.querySelector('.scroller');
+
+  if (scroller) {
+    // A flag to ensure we only add the override class once.
+    let isManuallyScrolled = false;
+
+    const handleManualScroll = () => {
+      if (!isManuallyScrolled) {
+        isManuallyScrolled = true;
+        // Add the class to permanently disable the CSS animation.
+        scroller.classList.add('manual-override');
+        // We can remove the listener now since its job is done.
+        scroller.removeEventListener('scroll', handleManualScroll);
+      }
+    };
+    
+    // The 'scroll' event listener is key. It only fires on a user-initiated
+    // scroll (mouse wheel, trackpad, touch drag), not on a CSS animation.
+    scroller.addEventListener('scroll', handleManualScroll);
   }
 });
 
